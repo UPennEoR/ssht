@@ -41,7 +41,11 @@ if not os.path.exists("./lib/c/libssht.a"):
 
 
 setup(
-    classifiers=['Programming Language :: Python :: 2.7'],
+    classifiers=[
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+    ],
     name = "pyssht",
     version = "2.0",
     cmdclass={'build_ext': build_ext},
