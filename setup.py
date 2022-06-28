@@ -1,6 +1,7 @@
 import sys
 import os
 import shutil
+import subprocess
 
 from distutils.core import setup, Extension
 from Cython.Distutils import build_ext
@@ -23,17 +24,33 @@ include_dirs = [
 
 extra_link_args=[
     "-L./lib/c",
-    "-L"+os.environ['FFTW']+"/lib",
 ]
 
+fftw_path = os.getenv("FFTW", None)
+if fftw_path:
+    extra_link_args.append("-L{}/lib".format(fftw_path))
+    
+if not os.path.exists("./lib/c/libssht.a"):
+    print("Making...")
+    subprocess.run(["make"])
+    print(os.listdir("./lib/c/"))
+
+          
+if not os.path.exists("./lib/c/libssht.a"):
+    sys.exit()
+
+
 setup(
-    classifiers=['Programming Language :: Python :: 2.7'],
+    classifiers=[
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+    ],
     name = "pyssht",
     version = "2.0",
-    prefix='.',
     cmdclass={'build_ext': build_ext},
     ext_modules=cythonize([Extension(
-        "src/python/pyssht",
+        "pyssht",
         package_dir=['src'],
         sources=["src/python/pyssht.pyx"],
         include_dirs=include_dirs,
